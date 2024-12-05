@@ -7,7 +7,10 @@ import $ from 'jquery';
 import { Buffer } from "buffer";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import Modal from './Controller/Modal';
 function App() {
+  let { id } = useParams()
   const [doc, setDoc] = useState("");
   async function modifyPdf() {
     try {
@@ -94,7 +97,7 @@ function App() {
           })
         if (statusText == "OK") {
           await axios.post("https://api.t-ickets.com/mikroti/Comnet/DOCUMENTO", parasm)
-          alert("DOCUMENTO FIRMADO")
+          alert("DOCUMENTO FIRMADO\N SOLICITA LA REVISION AL +593980850287")
 
         }
 
@@ -225,6 +228,44 @@ function App() {
     }
 
   }
+  async function name() {
+    let nombre = id
+    console.log(id)
+
+    if (nombre != "") {
+      try {
+        let parasm = {
+          "nombre": nombre,
+        }
+        let { data, statusText } = await axios.post("https://api.t-ickets.com/mikroti/Comnet/DOCUMENTO", parasm)
+        if (statusText == 'OK') {
+          console.log(data)
+          if (data.estado) {
+            let resp = await axios.get(data.url)
+            console.log(resp)
+            setDoc(data.url)
+          }
+        } else {
+          let { statusText } = await axios.get("https://api.ticketsecuador.ec/store/img/" + nombre + ".pdf")
+          if (statusText != 'OK') {
+            setDoc("https://api.ticketsecuador.ec/store/img/" + nombre + ".pdf")
+            //  alert("No se encontro el archivo")
+          } else {
+            setDoc("")
+          }
+        }
+        console.log(data)
+      } catch (error) {
+        setDoc("")
+        //  alert("No se encontro el archivo")
+      }
+    }
+
+
+  }
+  useEffect(() => {
+    name()
+  }, [])
   return (
 
     <div className='pb-3'>
@@ -252,7 +293,7 @@ function App() {
       </div>
       <nav className="navbar navbar-expand-lg  py-1 px-3  shadow-lg" style={{ fontFamily: 'asap-regular' }}>
         <div className="d-flex flex-wrap justify-content-between align-items-center w-100 text-center">
-          <a className="navbar-brand   pn-1" href="../" style={{ paddingRight: "-10px !important;" }}>
+          <a className="navbar-brand   pn-1" href="../" style={{ paddingRight: "-10px;" }}>
             <img data-src="" src="imagen/INTERNET_marca speed a color-02.png" style={{ height: "90px" }} alt="" loading="lazy" />
           </a>
           <div className=" navbar-dark">
@@ -310,6 +351,12 @@ function App() {
         </div>
       </nav>
       <div className='container  '>
+        <div className=' d-flex  align-items-center justify-content-center pt-3'>
+
+          {doc ? <Modal
+            url={""}
+          /> : ""}
+        </div>
         <h1 className='display-4 mt-5 pt-2 text-center fw-bold'>Firma tu Contrato</h1>
         {doc != "" ? "" : <div className=' container d-flex flex-column text-center justify-content-center'>
           <div className='  container text-center col-12 col-sm-6 '>
@@ -350,9 +397,9 @@ function App() {
                 <canvas id="canvas" ></canvas>
               </div>
               <div className=' d-flex   text-center justify-content-center'>
-                <button className='btn btn-success mx-1 ' onClick={modifyPdf}>Firmar</button>
-                <button className='btn btn-success mx-1' id='limpiar'>Limpiar</button>
-                {doc != "" ? <button className='btn btn-success mx-1' onClick={() => window.open(doc, '_blank')}>Ver Documento</button> : ""}
+                <button className='btn btn-primary mx-1 ' onClick={modifyPdf}>FIRMAR</button>
+                <button className='btn btn-primary mx-1' id='limpiar'>LIMPIAR</button>
+                {doc != "" ? <button className='btn btn-success mx-1 d-none' onClick={() => window.open(doc, '_blank')}>Ver Documento</button> : ""}
               </div>
             </div> : ""}
           </div>}

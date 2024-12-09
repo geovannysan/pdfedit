@@ -31,7 +31,7 @@ function App() {
 
         const pages = pdfDoc.getPages()
         const firstPage = pages[2]
-        const SecondtPage = pages[5]
+        //    const SecondtPage = pages[5]
         const TercerPage = pages[4]
 
         const { width, height } = firstPage.getSize()
@@ -55,12 +55,12 @@ function App() {
           width: width / 3,
           height: height / 25,
         });
-        SecondtPage.drawImage(image, {
+        /*SecondtPage.drawImage(image, {
           x: 5,
           y: 595,
           width: width / 3,
           height: height / 25,
-        });
+        });*/
         TercerPage.drawImage(image, {
           x: 323,
           y: 695,
@@ -85,21 +85,26 @@ function App() {
         const blob = new Blob([pdfBytes], { type: 'application/pdf' });
         let parasm = new FormData();
 
-        const fordata = new FormData();
+        let fordata = new FormData();
         const nombres = doc.split("img/")[1];
         parasm.append('archivo', blob, nombres);
         fordata.append('image', blob, nombres);
+        try {
+          await axios.post("https://api.ticketsecuador.ec/store/api/img/", fordata,
+            {
+              header: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic Ym9sZXRlcmlhOmJvbGV0ZXJpYQ=='
+              }
+            })
+          // if (statusText == "OK") {
+         // await axios.post("https://api.t-ickets.com/mikroti/Comnet/DOCUMENTO", parasm)
+          alert("DOCUMENTO FIRMADO\N SOLICITA LA REVISION AL +593980850287")
 
-        await axios.post("https://api.ticketsecuador.ec/store/api/img/", fordata,
-          {
-            header: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Basic Ym9sZXRlcmlhOmJvbGV0ZXJpYQ=='
-            }
-          })
-        // if (statusText == "OK") {
-        await axios.post("https://api.t-ickets.com/mikroti/Comnet/DOCUMENTO", parasm)
-        alert("DOCUMENTO FIRMADO\N SOLICITA LA REVISION AL +593980850287")
+        } catch (error) {
+          window.location.reload()
+
+        }
 
         //     }
 

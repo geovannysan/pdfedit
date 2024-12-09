@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 
 const Modal = (props) => {
     let { url } = props
-    const [height, setHeight] = useState(0)
-    const [width, setWidth] = useState(1024)
+    const [height] = useState(0)
+    const [width ] = useState(1024)
     const [show, setShow] = useState(false)
     useEffect(() => {
         renderWidth()

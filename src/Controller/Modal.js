@@ -67,7 +67,7 @@ const Modal = (props) => {
 
                         </div>
 
-                        <iframe src={"https://api.ticketsecuador.ec/store/img/00002963.pdf"} width={"100%"} height={renderWidth()} />
+                        <iframe src={url} width={"100%"} height={renderWidth()} />
                     </div>
                 </div>
             </div> : ""}

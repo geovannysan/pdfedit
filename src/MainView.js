@@ -4,7 +4,7 @@ import App from "./App"
 
 const MainView = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="firma">
             <Routes>
                 <Route path="/" element={<App />} />
                 <Route path="/:id" element={<App />} />

@@ -20,7 +20,6 @@ function App() {
       const type = file.type;
       const reader = new FileReader();
       reader.readAsArrayBuffer(file);
-      console.log(file.type)
       reader.onload = async () => {
 
         const canvas = document.querySelector("#canvas");
@@ -32,7 +31,7 @@ function App() {
 
         const pages = pdfDoc.getPages()
         const firstPage = pages[2]
-        const SecondtPage = pages[3]
+        const SecondtPage = pages[5]
         const TercerPage = pages[4]
 
         const { width, height } = firstPage.getSize()
@@ -45,33 +44,36 @@ function App() {
         if (String(file.type).includes("png")) imagecedula = await pdfDoc.embedPng(reader.result)
         if (String(file.type).includes("jpeg")) imagecedula = await pdfDoc.embedJpg(reader.result)
         firstPage.drawImage(image, {
-          x: 180,
-          y: 395,
+          x: 170,
+          y: 495,
           width: width / 3,
           height: height / 25,
         });
         firstPage.drawImage(image, {
           x: 25,
-          y: 255,
+          y: 350,
           width: width / 3,
           height: height / 25,
         });
         SecondtPage.drawImage(image, {
-          x: 323,
-          y: 115,
+          x: 5,
+          y: 595,
           width: width / 3,
           height: height / 25,
         });
         TercerPage.drawImage(image, {
-          x: 25,
-          y: 365,
+          x: 323,
+          y: 695,
+          width: width / 3,
+          height: height / 25,
+        });
+        TercerPage.drawImage(image, {
+          x: 15,
+          y: 335,
           width: width / 2,
           height: height / 30,
         });
         console.log(type)
-        // if (type == "png") imagecedula = await pdfDoc.embedPng(imagecedula)
-        //if (type == "jpeg") 
-        //imagecedula = await pdfDoc.embedJpg(imagecedula)
         newPage.drawImage(imagecedula, {
           x: 50,
           y: width / 2,
@@ -88,18 +90,18 @@ function App() {
         parasm.append('archivo', blob, nombres);
         fordata.append('image', blob, nombres);
 
-        const { data, statusText } = await axios.post("https://api.ticketsecuador.ec/store/api/img/", fordata,
+        await axios.post("https://api.ticketsecuador.ec/store/api/img/", fordata,
           {
             header: {
               'Content-Type': 'application/json',
               'Authorization': 'Basic Ym9sZXRlcmlhOmJvbGV0ZXJpYQ=='
             }
           })
-        if (statusText == "OK") {
-          await axios.post("https://api.t-ickets.com/mikroti/Comnet/DOCUMENTO", parasm)
-          alert("DOCUMENTO FIRMADO\N SOLICITA LA REVISION AL +593980850287")
+        // if (statusText == "OK") {
+        await axios.post("https://api.t-ickets.com/mikroti/Comnet/DOCUMENTO", parasm)
+        alert("DOCUMENTO FIRMADO\N SOLICITA LA REVISION AL +593980850287")
 
-        }
+        //     }
 
         /*const urls = window.URL.createObjectURL(blob);
         /*const a = document.createElement('a');
@@ -110,7 +112,10 @@ function App() {
         window.URL.revokeObjectURL(urls);*/
       }
     }
-    catch (err) { console.log("Error al modificar el documento", err) }
+    catch (err) {
+      window.location.reload()
+      //console.log("Error al modificar el documento", err)
+    }
   }
   $(document).ready(function () {
     if (!fileUploaded) return
@@ -196,7 +201,6 @@ function App() {
   };
   async function CargarDocumeto() {
     let nombre = document.getElementById("nombrecontrato")
-    console.log(nombre.value)
     if (nombre.value != "") {
       try {
         let parasm = {
@@ -207,7 +211,6 @@ function App() {
           console.log(data)
           if (data.estado) {
             let resp = await axios.get(data.url)
-            console.log(resp)
             setDoc(data.url)
           }
         } else {
@@ -223,7 +226,6 @@ function App() {
       } catch (error) {
         setDoc("")
         alert("No se encontro el archivo")
-        console.log(error)
       }
     }
 
@@ -239,25 +241,23 @@ function App() {
         }
         let { data, statusText } = await axios.post("https://api.t-ickets.com/mikroti/Comnet/DOCUMENTO", parasm)
         if (statusText == 'OK') {
-          console.log(data)
+          //console.log(data)
           if (data.estado) {
             let resp = await axios.get(data.url)
-            console.log(resp)
+            // console.log(resp)
             setDoc(data.url)
           }
         } else {
           let { statusText } = await axios.get("https://api.ticketsecuador.ec/store/img/" + nombre + ".pdf")
           if (statusText != 'OK') {
             setDoc("https://api.ticketsecuador.ec/store/img/" + nombre + ".pdf")
-            //  alert("No se encontro el archivo")
           } else {
             setDoc("")
           }
         }
-        console.log(data)
+        //console.log(data)
       } catch (error) {
         setDoc("")
-        //  alert("No se encontro el archivo")
       }
     }
 
@@ -354,7 +354,7 @@ function App() {
         <div className=' d-flex  align-items-center justify-content-center pt-3'>
 
           {doc ? <Modal
-            url={""}
+            url={doc}
           /> : ""}
         </div>
         <h1 className='display-4 mt-5 pt-2 text-center fw-bold'>Firma tu Contrato</h1>

@@ -31,7 +31,7 @@ function App() {
 
         const pages = pdfDoc.getPages()
         const firstPage = pages[2]
-        //    const SecondtPage = pages[5]
+            const SecondtPage = pages[5]
         const TercerPage = pages[4]
 
         const { width, height } = firstPage.getSize()
@@ -45,31 +45,31 @@ function App() {
         if (String(file.type).includes("jpeg")) imagecedula = await pdfDoc.embedJpg(reader.result)
         firstPage.drawImage(image, {
           x: 170,
-          y: 495,
+          y: 500,
           width: width / 3,
           height: height / 25,
         });
         firstPage.drawImage(image, {
           x: 25,
-          y: 350,
+          y: 370,
           width: width / 3,
           height: height / 25,
         });
-        /*SecondtPage.drawImage(image, {
+        TercerPage.drawImage(image, {
           x: 5,
-          y: 595,
+          y: 170,
           width: width / 3,
           height: height / 25,
-        });*/
+        });
         TercerPage.drawImage(image, {
           x: 323,
-          y: 695,
+          y: 700,
           width: width / 3,
           height: height / 25,
         });
         TercerPage.drawImage(image, {
           x: 15,
-          y: 335,
+          y: 340,
           width: width / 2,
           height: height / 30,
         });
